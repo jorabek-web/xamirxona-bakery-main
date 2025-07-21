@@ -1,0 +1,12 @@
+export enum ROLES {
+    CEO = 'CEO',
+    ADMIN = 'ADMIN',
+    BAKER = 'BAKER',
+    DRIVER = 'DRIVER',
+    SUPLIER = 'SUPLIER',
+    DIVIDER = 'DIVIDER',
+    CUSTOMER = 'CUSTOMER',
+    DOUGHMAKER = 'DOUGHMAKER',
+    DISPETCHER = 'DISPETCHER',
+  }
+  

@@ -1,0 +1,13 @@
+body {
+  background-color: #1C2C57;
+  overflow-x: hidden;
+}
+
+input:focus {
+  outline: none !important;
+  border: none !important;
+}
+
+.active {
+  color: #FFCC15;
+}

@@ -1,0 +1,9 @@
+export enum Type {
+  ORDER = "ORDER",
+  EXPENSE = "EXPENSE",
+  SUPPLY = "SUPPLY",
+  DOUGHS = "DOUGHS",
+  BREADS = "BREADS",
+  CLOSE = "CLOSE",
+  DELIVERED = "DELIVERED",
+}
