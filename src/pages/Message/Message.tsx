@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
   Avatar,
   AvatarFallback,
@@ -13,7 +13,6 @@ import { IoSend } from "react-icons/io5";
 // api
 import { useGetUserByIdQuery } from "../../app/api/userApi";
 import { useGetMessageQuery, usePostMessageMutation } from "../../app/api";
-import { socket } from "../../utils";
 
 
 export const Message = () => {
@@ -26,25 +25,13 @@ export const Message = () => {
   const [message, setMessage] = useState("");
 
 
-  useEffect(() => {
-    socket.on("message", (newMessage) => {
-      if (newMessage.to === id || newMessage.from === id) {
-        refetch()
-      }
-    });
-
-    return () => {
-      socket.off("message");
-    };
-  }, [id]);
 
   const sendMessage = async () => {
 
     if (!message.trim()) return;
 
     try {
-      const response = await post({ to: id as string, content: message }).unwrap();
-      socket.emit("message", response);
+      await post({ to: id as string, content: message }).unwrap();
   
       setMessage("");
       refetch();

@@ -38,7 +38,7 @@ export const Information = () => {
   const { data: LoginUser } = useGetSingleUserQuery({}, { skip: false });
   const { data: complaints = [] } = useGetAllComplaintsQuery({ skip: false });
   const { data: allUsers } = useGetAllUsersQuery(
-    { roles: Object.values(ROLES).filter((r) => r !== ROLES.CUSTOMER) },
+    { roles: Object.values(ROLES)},
     { skip: false }
   );
   const [postMessage] = usePostComplaintMessageMutation();

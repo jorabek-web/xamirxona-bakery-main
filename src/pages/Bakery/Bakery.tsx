@@ -1,5 +1,4 @@
 import { BsArrowLeftCircleFill } from "react-icons/bs";
-// import { FaShare } from "react-icons/fa";
 import { IoMdNotifications } from "react-icons/io";
 import { PiDotsThreeVerticalBold } from "react-icons/pi";
 import { useNavigate } from "react-router-dom";
@@ -33,7 +32,6 @@ import {
 } from "../../components/ui/dropdown-menu";
 import { Correct, Delete } from "../../icon";
 import { Timer } from "../../components/common";
-import { ROLES, Status, Type } from "../../constants";
 import {
   Select,
   SelectContent,
@@ -42,13 +40,8 @@ import {
   SelectValue,
 } from "../../components/ui/select";
 import { useGetAllBakeriesQuery } from "../../app/api/bakeryApi";
-import {
-  usePostNotificationMutation,
-  usePushNotificationMutation,
-} from "../../app/api";
-import { socket } from "../../utils";
+import {} from "../../app/api";
 import { useGetAllRetsepsQuery } from "../../app/api/retsepApi";
-import { string } from "yup";
 
 export const Bakery = () => {
   const navigate = useNavigate();
@@ -61,15 +54,13 @@ export const Bakery = () => {
   const [selectedDoughType, setSelectedDoughType] = useState("");
   const [readyDough, { isLoading }] = useReadyDoughMutation();
   const [sendToDough, { isLoading: sendToLoading }] = useSendToDoughMutation();
-  const [pushNotification] = usePushNotificationMutation();
-  const [postNotification] = usePostNotificationMutation();
   const { data } = useGetDoughsQuery({
     id: localStorage.getItem("selectedBranchId") || "",
     date: dayjs().format("YYYY-MM-DD"),
   });
 
   const [isOpen, setIsOpen] = useState(false);
-  const [modalOpen, setModalOpen] = useState("");
+  const [modalOpen, setModalOpen] = useState(false);
 
   const handleAddDough = async () => {
     if (!doughTypeCount || isNaN(Number(doughTypeCount))) {
@@ -110,39 +101,13 @@ export const Bakery = () => {
         return;
       }
 
-      const result = await sendToDough({
+      await sendToDough({
         id: selectedDoughType,
         send_to_baker_room: selectedBakery,
       }).unwrap();
 
       toast.success("Xamir uzatildi!");
-
-      // const notification = await postNotification({
-      //   type: Type.DOUGHS,
-      //   role: ROLES.DIVIDER,
-      //   doughroom: result.doughroomId,
-      //   doughs: [result._id as string],
-      // }).unwrap();
-
-      // socket.emit("/notification", notification);
-
-      // await Promise.all(
-      //   notification?.users?.map((id) =>
-      //     pushNotification({
-      //       id,
-      //       body: {
-      //         title: "Xamir uzatildi.",
-      //         body: "Xamir uzatildi, qabul qilasizmi?",
-      //         actions: [
-      //           { action: "accept", title: "Qabul qilish" },
-      //           { action: "decline", title: "Bekor qilish" },
-      //         ],
-      //         vibrate: [200, 100, 300],
-      //       },
-      //     })
-      //   ) || []
-      // );
-    
+      setModalOpen(false);
     } catch (error: any) {
       toast.error(error.message || "Kutilmagan xatolik !");
       console.log(error);
@@ -213,7 +178,7 @@ export const Bakery = () => {
                         <h4
                           className="font-semibold"
                           onClick={() => {
-                            setModalOpen(dough._id);
+                            setModalOpen(true);
                             setSelectedDoughType(dough._id);
                           }}
                         >
@@ -267,7 +232,7 @@ export const Bakery = () => {
         )}
       </div>
 
-      <Dialog open={!!modalOpen} onOpenChange={() => setModalOpen("")}>
+      <Dialog open={!!modalOpen} onOpenChange={() => setModalOpen(false)}>
         <DialogContent className="border-2 border-[#FFCC15] bg-transparent rounded-lg text-[#FFCC15]">
           <Select
             value={selectedBakery || ""}

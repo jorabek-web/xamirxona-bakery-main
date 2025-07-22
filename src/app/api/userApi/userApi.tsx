@@ -1,3 +1,4 @@
+import { ROLES } from "../../../constants";
 import { baseApi } from "../baseApi";
 import { PATHS } from "./paths";
 import {
@@ -22,11 +23,16 @@ export const userApi = baseApi.injectEndpoints({
       }),
     }),
     getAllUsers: builder.query<GetAllUsersResponse, GetAllUsersRequest>({
-      query: ({ roles }) => ({
-        url: PATHS.ALL_USER,
-        params: { roles },
-        method: "GET",
-      }),
+      query: ({ roles }: { roles: ROLES[] }) => {
+        const params = new URLSearchParams();
+        roles.forEach((role) => params.append("roles", role));
+
+        return {
+          url: PATHS.ALL_USER,
+          method: "GET",
+          params,
+        };
+      },
     }),
     getUserById: builder.query<GetUserByIdResponse, GetUserByIdRequest>({
       query: (id) => ({

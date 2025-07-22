@@ -17,11 +17,15 @@ import {
   TableRow,
 } from "../../components/ui/table";
 import { useEffect } from "react";
+import { useGetByIdDoughroomQuery } from "../../app/api/doughroomApi";
 
 export const Main = () => {
   const navigate = useNavigate();
   const { data: retsepts } = useGetAllRetsepsQuery([]);
   const { data: user } = useGetSingleUserQuery([]);
+  const { data: doughroom } = useGetByIdDoughroomQuery({
+    id: localStorage.getItem("selectedBranchId") || "",
+  });
 
   useEffect(() => {
     if (user?.doughroom) {
@@ -33,7 +37,7 @@ export const Main = () => {
     <div className="overflow-y-auto">
       <header className="flex justify-center items-center border-b-2 border-b-[#FFCC15] pb-3 rounded-[30px] mt-3">
         <h2 className="text-white text-center font-inter text-[25px] font-bold tracking-[1px] mt-2 flex items-center gap-2">
-          {user?.fullName}
+          {doughroom?.title}
         </h2>
 
         <IoMdNotifications
