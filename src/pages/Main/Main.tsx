@@ -26,10 +26,15 @@ export const Main = () => {
   const { data: doughroom } = useGetByIdDoughroomQuery({
     id: localStorage.getItem("selectedBranchId") || "",
   });
+  const token = localStorage.getItem("ACCESS_TOKEN");
 
   useEffect(() => {
     if (user?.doughroom) {
       localStorage.setItem("selectedBranchId", user.doughroom);
+    }
+
+    if (!token) {
+      window.location.href = "/login";
     }
   }, [user]);
 

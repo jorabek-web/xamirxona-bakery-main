@@ -45,9 +45,6 @@ export const Information = () => {
   const [message, setMessage] = useState("");
   const [selectedUserId, setSelectedUserId] = useState("");
 
-  console.log(complaints);
-  console.log(LoginUser);
-
   if (!LoginUser || !complaints?.length || !allUsers?.length) {
     return <p className="text-white text-center mt-5">Loading...</p>;
   }

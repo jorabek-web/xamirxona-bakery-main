@@ -54,7 +54,7 @@ export const Bakery = () => {
   const [selectedDoughType, setSelectedDoughType] = useState("");
   const [readyDough, { isLoading }] = useReadyDoughMutation();
   const [sendToDough, { isLoading: sendToLoading }] = useSendToDoughMutation();
-  const { data } = useGetDoughsQuery({
+  const { data: doughs } = useGetDoughsQuery({
     id: localStorage.getItem("selectedBranchId") || "",
     date: dayjs().format("YYYY-MM-DD"),
   });
@@ -134,8 +134,8 @@ export const Bakery = () => {
       </header>
 
       <div className="px-4 mt-10">
-        {data && data.length ? (
-          data.map((dough) => (
+        {doughs && doughs.length ? (
+          doughs.map((dough) => (
             <div
               key={dough._id}
               className={
@@ -227,8 +227,10 @@ export const Bakery = () => {
               </div>
             </div>
           ))
+        ) : doughs?.length == 0 ? (
+          <p className="text-white text-center mt-5">Ma'lumotlar mavjud emas</p>
         ) : (
-          <p className="text-white text-center mt-5">Ma'lumot yuklanmoqda...</p>
+          <p className="text-white text-center mt-5">Ma'lumotlar yuklanmoqda...</p>
         )}
       </div>
 
