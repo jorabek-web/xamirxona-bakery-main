@@ -12,7 +12,7 @@ export type GetAllComplaintsRequest = {};
 export interface GetAllComplaintsResponse {
   _id: string;
   from: FroAndTomUser;
-  to: string;
+  to: FroAndTomUser;
   content: string;
   createdAt: string;
   updatedAt: string;

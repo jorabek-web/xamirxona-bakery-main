@@ -1,9 +1,5 @@
 import { useState } from "react";
 import {
-  useGetMoneyReceivedQuery,
-  useGetSingleUserQuery,
-} from "../../../../app/api";
-import {
   Drawer,
   DrawerContent,
   DrawerDescription,
@@ -12,10 +8,10 @@ import {
 import { Button } from "../../../../components/ui/button";
 
 export const Olingan = () => {
-  const { data: user } = useGetSingleUserQuery([]);
-  const { data: receivedMoney } = useGetMoneyReceivedQuery({
-    id: user?._id!,
-  });
+  // const { data: user } = useGetSingleUserQuery([]);
+  // const { data: receivedMoney } = useGetMoneyReceivedQuery({
+  //   id: user?._id!,
+  // });
   const [isOpen, setIsOpen] = useState(false);
   // console.log(receivedMoney);
 
