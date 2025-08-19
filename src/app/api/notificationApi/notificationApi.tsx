@@ -1,83 +1,48 @@
 import { baseApi } from "../baseApi";
-import { GetUserResponse } from "../userApi/types";
 import { PATHS } from "./paths";
 import {
-  CreateNotificationRequest,
+  GetAllNotificationsRequest,
   GetAllNotificationsResponse,
   GetNotificationRequest,
   GetNotificationResponse,
-  PostNotificationRequest,
-  PostNotificationResponse,
-  PushNotificationRequest,
   UpdateNotificationRequest,
+  UpdateNotificationResponse,
 } from "./types";
 
 export const notificationApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-    getAllNotifications: builder.query<GetAllNotificationsResponse[], void>({
-      query: () => ({
-        url: PATHS.ALL,
+    getAllNotifications: builder.query<
+      GetAllNotificationsResponse[],
+      GetAllNotificationsRequest
+    >({
+      query: ({ id }) => ({
+        url: PATHS.ALL + id,
         method: "GET",
       }),
       providesTags: ["notification"],
     }),
-    getNotification: builder.query<
-      GetNotificationResponse,
+    getNotifications: builder.query<
+      GetNotificationResponse[],
       GetNotificationRequest
     >({
       query: ({ id }) => ({
-        url: PATHS.NOTIFICATION_ID + id,
+        url: PATHS.NOTIFICATIONS_START + id + PATHS.NOTIFICATIONS_END,
         method: "GET",
       }),
-    }),
-    postNotification: builder.mutation<
-      PostNotificationResponse,
-      PostNotificationRequest
-    >({
-      query: (body) => ({
-        url: PATHS.ALL,
-        method: "POST",
-        body,
-      }),
-      invalidatesTags: ["notification"],
-    }),
-    pushNotification: builder.mutation<void, PushNotificationRequest>({
-      query: ({ body, id }) => ({
-        url: PATHS.PUSHNOTIFICATION + id,
-        method: "POST",
-        body,
-      }),
-      invalidatesTags: ["notification"],
+      providesTags: ["notification"],
     }),
     updateNotification: builder.mutation<
-      PostNotificationResponse,
+      UpdateNotificationResponse,
       UpdateNotificationRequest
     >({
       query: ({ id, body }) => ({
-        url: PATHS.UPDATENOTIFICATION + id + "/doughroom/" + body?.status,
+        url: PATHS.UPDATE + id + "/doughroom/" + body?.status,
         method: "PATCH",
-      }),
-      invalidatesTags: ["notification"],
-    }),
-    createSubscribe: builder.mutation<
-      GetUserResponse,
-      CreateNotificationRequest
-    >({
-      query: (body) => ({
-        url: PATHS.SUBSCRIBE,
-        method: "POST",
-        body,
       }),
       invalidatesTags: ["notification"],
     }),
   }),
 });
 
-export const {
-  useGetAllNotificationsQuery,
-  useGetNotificationQuery,
-  usePostNotificationMutation,
-  usePushNotificationMutation,
-  useUpdateNotificationMutation,
-  useCreateSubscribeMutation,
-} = notificationApi;
+export const { useGetAllNotificationsQuery, useUpdateNotificationMutation, useGetNotificationsQuery } =
+  notificationApi;

@@ -1,4 +1,4 @@
 export enum PATHS {
-  ALL = "/expense",
+  ALL = "/expense/all-expense",
   EXPENSE_ID = "/expense/",
 }

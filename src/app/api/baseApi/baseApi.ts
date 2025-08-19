@@ -22,6 +22,7 @@ export const baseApi = createApi({
     "branch",
     "doughroom",
     "notification",
+    "salaries",
   ],
 });
 export default baseApi;

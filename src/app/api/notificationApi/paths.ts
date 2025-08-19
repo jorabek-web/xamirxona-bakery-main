@@ -1,7 +1,6 @@
 export enum PATHS {
-  ALL = "doughroom-notification/notifications/doughroom",
-  NOTIFICATION_ID = "/notification/",
-  PUSHNOTIFICATION = "/notification/push/",
-  SUBSCRIBE = "/notification/subscribe",
-  UPDATENOTIFICATION = "/doughroom-notification/"
+  NOTIFICATIONS_START = "/info-notification/",
+  NOTIFICATIONS_END = "/notifications/info",
+  ALL = "/doughroom-notification/notifications/doughroom/",
+  UPDATE = "/doughroom-notification/",
 }

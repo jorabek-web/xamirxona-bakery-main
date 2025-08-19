@@ -1,5 +1,6 @@
 export enum PATHS {
-    ALL = '/message',
-    MESSAGE_ID = '/message/',
-    ADD = '/message'
+  ALL = "/chat/",
+  MESSAGE_ID = "/chat/",
+  ADD = "/chat/message",
+  READ = "/chat/messages/read/one/",
 }

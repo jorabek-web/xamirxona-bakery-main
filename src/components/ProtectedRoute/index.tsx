@@ -13,15 +13,15 @@ export const ProtectedRoute = ({ element }: ProtectedRouteProps) => {
 
   useEffect(() => {
     if (isError && navigator.onLine) {
-      // localStorage.removeItem("ACCESS_TOKEN");
+      localStorage.removeItem("ACCESS_TOKEN");
       navigate("/login");
     }
     if (user && user.role !== "DOUGHMAKER") {
       toast.error("Bu ilova siz uchun emas!");
-      // localStorage.removeItem("ACCESS_TOKEN");
+      localStorage.removeItem("ACCESS_TOKEN");
       navigate("/login");
     }
   }, [user]);
 
-  return element
+  return element;
 };

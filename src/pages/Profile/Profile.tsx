@@ -1,20 +1,9 @@
 import { Avatar, AvatarImage } from "../../components/ui/avatar";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "../../components/ui/accordion";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableRow,
-} from "../../components/ui/table";
 import { Button } from "../../components/ui/button";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -34,6 +23,7 @@ import {
   Drawer,
   DrawerContent,
   DrawerDescription,
+  DrawerTitle,
   DrawerTrigger,
 } from "../../components/ui/drawer";
 
@@ -42,31 +32,34 @@ import { Label } from "../../components/ui/label";
 
 // images
 import { FaCamera } from "react-icons/fa";
-import { IoMdLock } from "react-icons/io";
+import { IoIosArrowForward, IoMdLock } from "react-icons/io";
 import { TbShare2 } from "react-icons/tb";
 import { useNavigate } from "react-router-dom";
 import {
   useGetSingleUserQuery,
-  useUpdateUserMutation,
+  useUpdateUserAvatarMutation,
   useUpdateUserPasswordMutation,
 } from "../../app/api";
 import { useState } from "react";
 import { Toaster, toast } from "react-hot-toast";
+import { EyeIcon, EyeOff } from "lucide-react";
 import { useUploadImageMutation } from "../../app/api/uploadApi";
-import { useGetAllExpesesQuery } from "../../app/api/expenseApi";
-import dayjs from "dayjs";
 
 export const Profile = () => {
   const navigate = useNavigate();
   const { data: user } = useGetSingleUserQuery({});
   const [updateUserPassword] = useUpdateUserPasswordMutation();
-  const [updateUser] = useUpdateUserMutation({});
-  const [uploadImage] = useUploadImageMutation();
+  const [updateUserAvatar] = useUpdateUserAvatarMutation();
+  // const [updateUser] = useUpdateUserMutation({});
+  // const [uploadImage] = useUploadImageMutation();
   const [password, setPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [changeImage, setChangeImage] = useState<File | null>(null);
-  const { data: salaries } = useGetAllExpesesQuery({});
+  const [showPassword, setShowPassword] = useState<{ [key: string]: boolean }>(
+    {}
+  );
+  const [uploadImage] = useUploadImageMutation();
 
   // // change name
   // const handleNameChange = async () => {
@@ -85,20 +78,24 @@ export const Profile = () => {
   // }
 
   const handleImageChange = async () => {
-    if (!changeImage) return;
+    if (!changeImage) {
+      toast.error("Rasm yuklang !");
+      return;
+    }
     const formData = new FormData();
     formData.append("file", changeImage);
 
     const url = await uploadImage(formData).unwrap();
-    const response = await updateUser({
-      id: user?._id as string,
+
+    const response = await updateUserAvatar({
       avatar: url,
     });
+
     if (response.error) {
-      toast.error("Image change failed. Please try again.");
+      toast.error("Rasm yuklanmadi, qaytadan urining !");
       return;
     } else {
-      toast.success("Image changed successfully!");
+      toast.success("Rasm yuklandi !");
     }
     window.location.reload();
   };
@@ -120,18 +117,21 @@ export const Profile = () => {
 
   // change password
   const handlePasswordChange = async () => {
+    if (!password || !newPassword || !confirmPassword) {
+      toast.error("Barcha maydonlarni toldiring !");
+      return;
+    }
     const response = await updateUserPassword({
       oldPassword: password,
       newPassword: newPassword,
       confirmPassword: confirmPassword,
     });
+    console.log(response);
     if (response.error) {
-      toast.error(
-        "Password change failed. Check your old password and try again."
-      );
+      toast.error("eski parol yoki yangi parol xato !");
       return;
     } else {
-      toast.success("Password changed successfully!");
+      toast.success("Parol yangilandi !");
       setPassword("");
       setNewPassword("");
       setConfirmPassword("");
@@ -143,8 +143,20 @@ export const Profile = () => {
   // handle logout
   const handleRemove = () => {
     localStorage.removeItem("ACCESS_TOKEN");
+    localStorage.removeItem("selectedBranchId");
     navigate("/login");
   };
+
+  // default avatar img
+  function getAvatarUrl(avatar: any): string {
+    const fallback =
+      "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png";
+    try {
+      return JSON.parse(avatar)?.url || fallback;
+    } catch {
+      return fallback;
+    }
+  }
 
   return (
     <>
@@ -152,15 +164,21 @@ export const Profile = () => {
         <Toaster position="top-center" reverseOrder={false} />
         <div className="flex items-center gap-4">
           <Avatar className="w-[116px] h-[116px]">
-            <AvatarImage width={116} height={116} src={user?.avatar} />
+            <AvatarImage
+              width={116}
+              height={116}
+              src={getAvatarUrl(user?.avatar)}
+            />
           </Avatar>
           <h1 className=" text-white text-center font-inter text-[20px] font-bold tracking-[1px]">
             {user?.fullName}
           </h1>
         </div>
-        <button className="w-14 h-14 p-[12px] rounded-[25px] absolute top-20 left-24 bg-[#677294CC]">
+
+        {/* <button className="w-14 h-14 p-[12px] rounded-[25px] absolute top-20 left-24 bg-[#677294CC]">
           <FaCamera className="" size={30} color="white" />
-        </button>
+        </button> */}
+
         <Dialog>
           <DialogTrigger asChild>
             <button className="w-14 h-14 p-[12px] rounded-[25px] absolute top-20 left-24 bg-[#677294CC]">
@@ -172,6 +190,7 @@ export const Profile = () => {
               <DialogTitle className="text-[#FFCC15] font-bold text-[20px]">
                 Rasimni o'zgartirish
               </DialogTitle>
+              <DialogDescription></DialogDescription>
             </DialogHeader>
             <div className="grid gap-4 py-4">
               <div className="flex flex-col items-start gap-2">
@@ -202,38 +221,6 @@ export const Profile = () => {
           </DialogContent>
         </Dialog>
       </header>
-      <Accordion type="single" collapsible className=" px-4  mt-14">
-        <AccordionItem value="item-1">
-          <AccordionTrigger className="hover:no-underline bg-white p-2 rounded-lg border-2 border-yellow-400">
-            Maoshlarim
-          </AccordionTrigger>
-          <AccordionContent className="">
-            <div className="flex items-center gap-20 my-2">
-              <span className="text-[#FFCC15] text-[14px] font-bold px-4">
-                Olingan puli
-              </span>
-              <span className="text-[#FFCC15] text-[14px] font-bold px-4">
-                Sana
-              </span>
-            </div>
-
-            <Table className="bg-white">
-              <TableBody className="border border-yellow-400 rounded-lg">
-                {salaries?.map((salary: any) => (
-                  <TableRow className="hover:bg-transparent border-b border-b-yellow-400 ">
-                    <TableCell className="font-bold text-[15px] text-[#1C2C57]">
-                      {salary.amount} sum
-                    </TableCell>
-                    <TableCell className="font-bold text-[15px] text-[#1C2C57]">
-                      {dayjs(salary.createdAt).format("MM.DD.YYYY")}
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </AccordionContent>
-        </AccordionItem>
-      </Accordion>
 
       <div className="px-4 mt-5">
         {/* <Drawer>
@@ -268,6 +255,20 @@ export const Profile = () => {
           </DrawerContent>
         </Drawer> */}
 
+        <div className="w-full text-white text-center font-inter text-[25px] font-bold tracking-[1px] flex items-center gap-2">
+          <button
+            className="w-full bg-white p-3 rounded-lg flex items-center gap-5 border-2 border-solid border-yellow-400 mb-4"
+            onClick={() => navigate("/salaries")}
+          >
+            <span className="text-[#1C2C57] font-bold text-[15px]">
+              Maoshlarim
+            </span>
+            <span className="bg-[#1C2C57] p-1 px-1.5 rounded-md absolute t-[50%] right-8">
+              <IoIosArrowForward color="#FFCC15" />
+            </span>
+          </button>
+        </div>
+
         <Drawer>
           <DrawerTrigger className="w-full text-white text-center font-inter text-[25px] font-bold tracking-[1px] flex items-center gap-2">
             <button className="w-full bg-white p-3 rounded-lg flex items-center gap-5 border-2 border-solid border-yellow-400 mb-4">
@@ -277,59 +278,116 @@ export const Profile = () => {
               </span>
             </button>
           </DrawerTrigger>
-          <DrawerContent className="bg-[#1C2C57] rounded-[20px] border-none ">
-            <DrawerDescription className="">
-              <div className="grid gap-4 py-4">
-                <div className="flex flex-col items-start gap-2 px-4">
-                  <Label
-                    htmlFor="password"
-                    className="text-right text-white font-bold text-[15px]"
-                  >
-                    Eski parol
-                  </Label>
+          <DrawerContent className="bg-[#1C2C57] rounded-t-[20px] border-none ">
+            <DrawerTitle></DrawerTitle>
+            <DrawerDescription></DrawerDescription>
+            <div className="grid gap-4 py-4">
+              <div className="flex flex-col items-start gap-2 px-4">
+                <Label
+                  htmlFor="password"
+                  className="text-right text-white font-bold text-[15px]"
+                >
+                  Eski parol
+                </Label>
+                <div className="relative w-full">
                   <Input
                     onChange={(e) => setPassword(e.target.value)}
                     id="password"
+                    placeholder="old password"
+                    type={showPassword["password"] ? "text" : "password"}
                     className="col-span-3 border-yellow-400 text-black"
                   />
-                </div>
-                <div className="flex flex-col items-start gap-2 px-4">
-                  <Label
-                    htmlFor="password"
-                    className="text-right text-white font-bold text-[15px]"
+                  <div
+                    className="absolute top-[50%] right-5 z-10 transform -translate-y-1/2"
+                    onClick={() =>
+                      setShowPassword((prev) => ({
+                        ...prev,
+                        ["password"]: !prev["password"],
+                      }))
+                    }
                   >
-                    Yangi parol
-                  </Label>
+                    {!showPassword["password"] ? (
+                      <EyeOff className="text-black opacity-50" fill="none" />
+                    ) : (
+                      <EyeIcon className="text-black opacity-50" fill="none" />
+                    )}
+                  </div>
+                </div>
+              </div>
+              <div className="flex flex-col items-start gap-2 px-4">
+                <Label
+                  htmlFor="newpassword"
+                  className="text-right text-white font-bold text-[15px]"
+                >
+                  Yangi parol
+                </Label>
+                <div className="relative w-full">
                   <Input
                     onChange={(e) => setNewPassword(e.target.value)}
-                    id="password"
+                    id="newpassword"
+                    placeholder="new password"
+                    type={showPassword["newpassword"] ? "text" : "password"}
                     className="col-span-3 border-yellow-400 text-black"
                   />
-                </div>
-                <div className="flex flex-col items-start gap-2 px-4">
-                  <Label
-                    htmlFor="username"
-                    className="text-right text-white font-bold text-[15px]"
+                  <div
+                    className="absolute top-[50%] right-5 z-10 transform -translate-y-1/2"
+                    onClick={() =>
+                      setShowPassword((prev) => ({
+                        ...prev,
+                        ["newpassword"]: !prev["newpassword"],
+                      }))
+                    }
                   >
-                    Yangi parolni tasdiqlash
-                  </Label>
+                    {!showPassword["newpassword"] ? (
+                      <EyeOff className="text-black opacity-50" fill="none" />
+                    ) : (
+                      <EyeIcon className="text-black opacity-50" fill="none" />
+                    )}
+                  </div>
+                </div>
+              </div>
+              <div className="flex flex-col items-start gap-2 px-4">
+                <Label
+                  htmlFor="username"
+                  className="text-right text-white font-bold text-[15px]"
+                >
+                  Yangi parolni tasdiqlash
+                </Label>
+                <div className="relative w-full">
                   <Input
                     onChange={(e) => setConfirmPassword(e.target.value)}
                     id="username"
+                    placeholder="confirm password"
+                    type={showPassword["username"] ? "text" : "password"}
                     className="col-span-3 border-yellow-400 text-black"
                   />
-                </div>
-                <div className="px-4 mt-5">
-                  <Button
-                    onClick={handlePasswordChange}
-                    type="submit"
-                    className="w-full hover:bg-[#FFCC15] bg-[#FFCC15] text-[#1C2C57] "
+                  <div
+                    className="absolute top-[50%] right-5 z-10 transform -translate-y-1/2"
+                    onClick={() =>
+                      setShowPassword((prev) => ({
+                        ...prev,
+                        ["username"]: !prev["username"],
+                      }))
+                    }
                   >
-                    Save changes
-                  </Button>
+                    {!showPassword["username"] ? (
+                      <EyeOff className="text-black opacity-50" fill="none" />
+                    ) : (
+                      <EyeIcon className="text-black opacity-50" fill="none" />
+                    )}
+                  </div>
                 </div>
               </div>
-            </DrawerDescription>
+              <div className="px-4 mt-5">
+                <Button
+                  onClick={handlePasswordChange}
+                  type="submit"
+                  className="w-full hover:bg-[#FFCC15] bg-[#FFCC15] text-[#1C2C57] "
+                >
+                  Saqlash
+                </Button>
+              </div>
+            </div>
           </DrawerContent>
         </Drawer>
 
@@ -342,18 +400,18 @@ export const Profile = () => {
               </span>
             </button>
           </AlertDialogTrigger>
-          <AlertDialogContent>
+          <AlertDialogContent className="bg-[#1C2C57] text-white">
             <AlertDialogHeader>
               <AlertDialogTitle>Akkountdan chiqasizmi?</AlertDialogTitle>
               <AlertDialogDescription></AlertDialogDescription>
             </AlertDialogHeader>
-            <AlertDialogFooter className="flex ">
+            <AlertDialogFooter className="flex">
               <AlertDialogCancel className="bg-[#FFCC15] hover:bg-[#FFCC15] text-[#1C2C57]">
                 Bekor qilish
               </AlertDialogCancel>
               <button
                 onClick={handleRemove}
-                className="border-2 p-2 rounded-lg bg-red-700 text-[#1C2C57]"
+                className="p-2 rounded-lg bg-red-700"
               >
                 Chiqish
               </button>

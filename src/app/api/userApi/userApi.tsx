@@ -10,8 +10,8 @@ import {
   GetUserByIdResponse,
   GetUserRequest,
   GetUserResponse,
-  UpdateUserRequest,
-  UpdateUserResponse,
+  UpdateUserAvatarRequest,
+  UpdateUserAvatarResponse,
 } from "./types";
 
 export const userApi = baseApi.injectEndpoints({
@@ -50,13 +50,25 @@ export const userApi = baseApi.injectEndpoints({
         body,
       }),
     }),
-    updateUser: builder.mutation<UpdateUserResponse, UpdateUserRequest>({
+
+    updateUserAvatar: builder.mutation<
+      UpdateUserAvatarResponse,
+      UpdateUserAvatarRequest
+    >({
       query: (body) => ({
-        url: PATHS.USER_ID + body.id,
+        url: PATHS.USER_AVATAR,
         method: "PATCH",
         body,
       }),
     }),
+
+    // updateUser: builder.mutation<UpdateUserResponse, UpdateUserRequest>({
+    //   query: (body) => ({
+    //     url: PATHS.USER_ID + body.id,
+    //     method: "PATCH",
+    //     body,
+    //   }),
+    // }),
   }),
 });
 
@@ -66,5 +78,5 @@ export const {
   useGetUserByIdQuery,
   useLazyGetUserByIdQuery,
   useUpdateUserPasswordMutation,
-  useUpdateUserMutation,
+  useUpdateUserAvatarMutation,
 } = userApi;

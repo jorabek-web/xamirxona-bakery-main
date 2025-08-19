@@ -1,5 +1,6 @@
 export enum PATHS {
-  ALL = "/complaint",
+  ALL = "/complaint/received-complaints",
+  MY_COMPLAINTS = "/complaint/my-complaints",
   POST = "/complaint",
   COMPLAINT_ID = "/complaint/",
 }

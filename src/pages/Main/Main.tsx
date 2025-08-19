@@ -26,17 +26,41 @@ export const Main = () => {
   const { data: doughroom } = useGetByIdDoughroomQuery({
     id: localStorage.getItem("selectedBranchId") || "",
   });
+  const selectedBranchId = localStorage.getItem("selectedBranchId");
   const token = localStorage.getItem("ACCESS_TOKEN");
 
   useEffect(() => {
-    if (user?.doughroom) {
+    if (user?.doughroom && user._id) {
       localStorage.setItem("selectedBranchId", user.doughroom);
+      localStorage.setItem("userId", user._id);
     }
-
     if (!token) {
       window.location.href = "/login";
     }
-  }, [user]);
+  }, [user, token]);
+
+  if ((user && user?.message) || !user?.doughroom || !selectedBranchId) {
+    return (
+      <div className="flex flex-col items-center gap-5">
+        <p className="text-white text-center mt-20 text-[24px]">
+          {user?.message ?? "Xatolik yuz berdi"}...
+        </p>
+
+        <button
+          onClick={() => (window.location.href = "/")}
+          className="bg-[#FFCC15] w-40 h-10 rounded-lg text-white"
+        >
+          sahifani yangilash
+        </button>
+
+        {user?.message && (
+          <p className="text-[#fff9] text-center text-[16px]">
+            tasdiqlangandan so'ng sahifani yangilang
+          </p>
+        )}
+      </div>
+    );
+  }
 
   return (
     <div className="overflow-y-auto">

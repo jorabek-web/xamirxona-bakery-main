@@ -1,9 +1,6 @@
 import { useEffect, useState } from "react";
 import "./PWABadge.css";
 import { useRegisterSW } from "virtual:pwa-register/react";
-import { useCreateSubscribeMutation } from "./app/api";
-import { useHandleRequest } from "./hook";
-
 function urlBase64ToUint8Array(base64String: string) {
   const padding = "=".repeat((4 - (base64String.length % 4)) % 4);
   const base64 = (base64String + padding).replace(/-/g, "+").replace(/_/g, "/");
@@ -12,8 +9,6 @@ function urlBase64ToUint8Array(base64String: string) {
 }
 
 function PWABadge() {
-  const handleRequest = useHandleRequest();
-  const [createSubscribe] = useCreateSubscribeMutation();
   const period = 60 * 60 * 1000;
   const [showSubscribe, setShowSubscribe] = useState(false);
   const [subscribtion, setSubscription] = useState(() =>
@@ -80,11 +75,6 @@ function PWABadge() {
           "push-subscribtion",
           JSON.stringify(existingSubscription)
         );
-        await handleRequest({
-          request: async () => {
-            await createSubscribe(existingSubscription).unwrap();
-          },
-        });
         setShowSubscribe(false);
         return;
       }
@@ -97,11 +87,6 @@ function PWABadge() {
       });
 
       console.warn("User subscribed:", subscription);
-      await handleRequest({
-        request: async () => {
-          await createSubscribe(subscription).unwrap();
-        },
-      });
 
       setSubscription(JSON.stringify(subscription));
       localStorage.setItem("push-subscribtion", JSON.stringify(subscription));

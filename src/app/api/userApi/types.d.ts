@@ -29,7 +29,12 @@ export type GetUserByIdRequest = string;
 export type GetUserByIdResponse = User;
 
 export type GetUserRequest = {};
-export type GetUserResponse = User;
+export interface GetUserResponse extends User {
+  user?: string;
+  role?: string;
+  message?: string;
+  salaryBalance?: string;
+}
 
 export type GetAllUsersResponse = User[];
 export type GetAllUsersRequest = {
@@ -51,3 +56,9 @@ export type UpdateUserRequest = {
   avatar?: string;
 };
 export type UpdateUserResponse = {};
+
+export type UpdateUserAvatarRequest = {
+  avatar: string;
+};
+
+export type UpdateUserAvatarResponse = {};

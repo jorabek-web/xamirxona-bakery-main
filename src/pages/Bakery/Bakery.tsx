@@ -6,8 +6,11 @@ import { Alert, AlertDescription } from "../../components/ui/alert";
 import {
   Dialog,
   DialogContent,
+  DialogTitle,
   DialogTrigger,
 } from "../../components/ui/dialog";
+import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
+
 import { Button } from "../../components/ui/button";
 import { Input } from "../../components/ui/input";
 import { Label } from "../../components/ui/label";
@@ -42,6 +45,7 @@ import {
 import { useGetAllBakeriesQuery } from "../../app/api/bakeryApi";
 import {} from "../../app/api";
 import { useGetAllRetsepsQuery } from "../../app/api/retsepApi";
+import { DialogDescription } from "@radix-ui/react-dialog";
 
 export const Bakery = () => {
   const navigate = useNavigate();
@@ -230,12 +234,22 @@ export const Bakery = () => {
         ) : doughs?.length == 0 ? (
           <p className="text-white text-center mt-5">Ma'lumotlar mavjud emas</p>
         ) : (
-          <p className="text-white text-center mt-5">Ma'lumotlar yuklanmoqda...</p>
+          <p className="text-white text-center mt-5">
+            Ma'lumotlar yuklanmoqda...
+          </p>
         )}
       </div>
 
       <Dialog open={!!modalOpen} onOpenChange={() => setModalOpen(false)}>
         <DialogContent className="border-2 border-[#FFCC15] bg-transparent rounded-lg text-[#FFCC15]">
+          <VisuallyHidden>
+            <DialogTitle>Nonvoyxonaga uzatish</DialogTitle>
+
+            <DialogDescription>
+              Nonvoyxonaga uzatish uchun Nonvoyxonani tanlang
+            </DialogDescription>
+          </VisuallyHidden>
+
           <Select
             value={selectedBakery || ""}
             onValueChange={(id) => {
@@ -271,13 +285,23 @@ export const Bakery = () => {
             <div className="flex justify-end items-end relative p-4">
               <Button
                 variant="outline"
-                className="rounded-[50%] p-4 bg-[#FFCC15] w-14 h-14"
+                className="rounded-[50%] p-4 bg-[#FFCC15] fixed bottom-20 right-5 w-14 h-14"
               >
                 <FaPlus size={25} />
               </Button>
             </div>
           </DialogTrigger>
-          <DialogContent className="border-2 border-[#FFCC15] bg-transparent rounded-lg text-[#FFCC15]">
+
+          <DialogContent
+            aria-describedby="xamir miqdorini qoshish"
+            className="border-2 border-[#FFCC15] bg-transparent rounded-lg text-[#FFCC15]"
+          >
+            <VisuallyHidden>
+              <DialogTitle>Xamir miqdori</DialogTitle>
+
+              <DialogDescription>Xamir miqdorini qoshish</DialogDescription>
+            </VisuallyHidden>
+
             <Select
               value={selectedDoughType || ""}
               onValueChange={(id) => {
