@@ -51,15 +51,6 @@ export const Information = () => {
   const [message, setMessage] = useState("");
   const [selectedUserId, setSelectedUserId] = useState("");
 
-  if (
-    !complaints?.length ||
-    !my_complaints?.length ||
-    !allUsers?.length ||
-    !single_user
-  ) {
-    return <p className="text-white text-center mt-5">Loading...</p>;
-  }
-
   const handelPostComplaintMessage = async () => {
     if (!selectedUserId || !message.trim()) {
       toast.error("Iltimos, xodimni tanlang va xabar yozing!");
