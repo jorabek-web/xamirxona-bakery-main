@@ -54,7 +54,7 @@ export const Information = () => {
   const handelPostComplaintMessage = async () => {
     if (!selectedUserId || !message.trim()) {
       toast.error("Iltimos, xodimni tanlang va xabar yozing!");
-      return;
+      return; 
     }
 
     const response = await postMessage({
