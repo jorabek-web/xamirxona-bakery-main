@@ -287,7 +287,7 @@ export const Bakery = () => {
                 variant="outline"
                 className="rounded-[50%] p-4 bg-[#FFCC15] fixed bottom-20 right-5 w-14 h-14"
               >
-                <FaPlus size={25} />
+                <FaPlus size={25} color="#1C2C57" />
               </Button>
             </div>
           </DialogTrigger>
