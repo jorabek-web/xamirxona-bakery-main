@@ -11,8 +11,6 @@ export const ProtectedRoute = ({ element }: ProtectedRouteProps) => {
   const navigate = useNavigate();
   const { data: user, isError } = useGetSingleUserQuery({});
 
-  console.log(navigator.onLine, isError);
-
   useEffect(() => {
     if (isError && navigator.onLine) {
       localStorage.removeItem("ACCESS_TOKEN");
