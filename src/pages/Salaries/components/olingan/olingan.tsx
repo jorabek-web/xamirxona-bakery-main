@@ -6,45 +6,81 @@ import {
   DrawerTitle,
 } from "../../../../components/ui/drawer";
 import { Button } from "../../../../components/ui/button";
+import {
+  useGetMoneyReceivedQuery,
+  useGetSingleUserQuery,
+} from "../../../../app/api";
+import { formatNumberWithSpaces } from "../../../../utils";
+import dayjs from "dayjs";
+
+type FromUser = {
+  fromUser: {
+    _id: string;
+    role: string;
+    fullName: string;
+  };
+  createdAt: string;
+  amount: number;
+};
 
 export const Olingan = () => {
-  // const { data: user } = useGetSingleUserQuery([]);
-  // const { data: receivedMoney } = useGetMoneyReceivedQuery({
-  //   id: user?._id!,
-  // });
+  const { data: user } = useGetSingleUserQuery([]);
+  const { data: receivedMoney } = useGetMoneyReceivedQuery({
+    id: user?._id!,
+  });
   const [isOpen, setIsOpen] = useState(false);
-  // console.log(receivedMoney);
+  const [fromUser, setFromUser] = useState<FromUser>();
 
   return (
     <div className="space-y-5">
-      <div
-        onClick={() => setIsOpen(true)}
-        className="w-full h-12 bg-white border-2 border-[#FFCC15] p-2 px-4 rounded-lg flex items-center justify-between gap-2 text-[#1C2C57] text-[15px] font-[700]"
-      >
-        <div>
-          <p>500 000</p>
-          <p className="text-[#C71A1A]">-450 000</p>
-        </div>
+      {receivedMoney ? (
+        receivedMoney && receivedMoney.length > 0 ? (
+          receivedMoney.map((money) => (
+            <div
+              key={money._id}
+              onClick={() => {
+                setFromUser({
+                  fromUser: money.fromUser,
+                  createdAt: money.createdAt,
+                  amount: money.amount,
+                });
+                setIsOpen(true);
+              }}
+              className="w-full h-16 bg-white border-2 border-[#FFCC15] p-2 px-4 rounded-lg flex items-center justify-between gap-2 text-[#1C2C57] text-[15px] font-[700]"
+            >
+              <div>
+                <p className=" text-[18px]">
+                  {formatNumberWithSpaces(money.amount)}
+                </p>
+                <p
+                  className={`${
+                    money.totalAmount >= 0 ? "text-[#099431]" : "text-[#C71A1A]"
+                  } text-[18px]`}
+                >
+                  {formatNumberWithSpaces(money.totalAmount)}
+                </p>
+              </div>
 
-        <div className="flex items-center gap-2">
-          <p>29.03.2025 </p>
-          <p>21:30</p>
-        </div>
-      </div>
-      <div
-        onClick={() => setIsOpen(true)}
-        className="w-full h-12 bg-white border-2 border-[#FFCC15] p-2 px-4 rounded-lg flex items-center justify-between gap-2 text-[#1C2C57] text-[15px] font-[700]"
-      >
-        <div>
-          <p>1 550 000</p>
-          <p className="text-[#099431]">1 000 000</p>
-        </div>
-
-        <div className="flex items-center gap-2">
-          <p>29.03.2025 </p>
-          <p>19:40</p>
-        </div>
-      </div>
+              <div className="flex items-center gap-2">
+                <p className=" text-[18px]">
+                  {dayjs(money.createdAt).format("DD.MM.YYYY")}
+                </p>
+                <p className=" text-[18px]">
+                  {dayjs(money.createdAt).format("HH:mm")}
+                </p>
+              </div>
+            </div>
+          ))
+        ) : (
+          <p className="text-white font-[600] text-[18px] text-center">
+            Ma'lumotlar hozircha yoq
+          </p>
+        )
+      ) : (
+        <p className="text-white font-[600] text-[18px] text-center">
+          Loading...
+        </p>
+      )}
 
       <Drawer open={isOpen} onOpenChange={setIsOpen}>
         <DrawerContent className="bg-[#1C2C57] rounded-t-[20px] border-none">
@@ -53,11 +89,17 @@ export const Olingan = () => {
             <DrawerDescription></DrawerDescription>
             <div className="flex flex-col items-start gap-5 text-[#1C2C57] font-[700]">
               <div className="w-full h-10 bg-white rounded-lg border-2 border-[#FFCC15] flex items-center p-2">
-                <p>Shuhrat (Admin)</p>
+                <p>
+                  {fromUser?.fromUser?.fullName ?? "noma'lum"} (
+                  {fromUser?.fromUser?.role ?? "noma'lum"})
+                </p>
               </div>
               <div className="w-full h-10 bg-white rounded-lg border-2 border-[#FFCC15] flex items-center justify-between gap-5 p-2">
-                <p>500 000</p>
-                <p>04.12.2024 10:35</p>
+                <p>{formatNumberWithSpaces(fromUser?.amount ?? 0)}</p>
+                <div className="flex items-center gap-2">
+                  <p>{dayjs(fromUser?.createdAt).format("DD.MM.YYYY")}</p>
+                  <p> {dayjs(fromUser?.createdAt).format("HH:mm")}</p>
+                </div>
               </div>
             </div>
             <div className="flex justify-end">

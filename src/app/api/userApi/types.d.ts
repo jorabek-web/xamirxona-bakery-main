@@ -33,7 +33,7 @@ export interface GetUserResponse extends User {
   user?: string;
   role?: string;
   message?: string;
-  salaryBalance?: string;
+  salaryBalance?: number;
 }
 
 export type GetAllUsersResponse = User[];

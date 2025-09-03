@@ -1,3 +1,4 @@
+import { API_TAGS } from "../../../constants/ApiTags";
 import { baseApi } from "../baseApi";
 import { PATHS } from "./paths";
 import {
@@ -21,7 +22,7 @@ export const complaintApi = baseApi.injectEndpoints({
         url: PATHS.ALL,
         method: "GET",
       }),
-      providesTags: ["complaint"],
+      providesTags: [API_TAGS.COMPLAINT],
     }),
 
     getMyComplaints: builder.query<
@@ -32,7 +33,7 @@ export const complaintApi = baseApi.injectEndpoints({
         url: PATHS.MY_COMPLAINTS,
         method: "GET",
       }),
-      providesTags: ["complaint"],
+      providesTags: [API_TAGS.COMPLAINT],
     }),
 
     getComplaint: builder.query<GetComplaintResponse, GetComplaintRequest>({
@@ -40,7 +41,7 @@ export const complaintApi = baseApi.injectEndpoints({
         url: PATHS.COMPLAINT_ID + id,
         method: "GET",
       }),
-      providesTags: ["complaint"],
+      providesTags: [API_TAGS.COMPLAINT],
     }),
 
     postComplaintMessage: builder.mutation<
@@ -52,7 +53,7 @@ export const complaintApi = baseApi.injectEndpoints({
         method: "POST",
         body,
       }),
-      invalidatesTags: ["complaint"],
+      invalidatesTags: [API_TAGS.COMPLAINT],
     }),
   }),
 });

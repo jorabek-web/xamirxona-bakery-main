@@ -1,3 +1,4 @@
+import { API_TAGS } from "../../../constants/ApiTags";
 import { baseApi } from "../baseApi";
 import { PATHS } from "./paths";
 import {
@@ -29,7 +30,7 @@ export const doughroomApi = baseApi.injectEndpoints({
         url: PATHS.ALL,
         method: "GET",
       }),
-      providesTags: ["doughroom"],
+      providesTags: [API_TAGS.DOUGHTROOM],
     }),
 
     getByIdDoughroom: builder.query<
@@ -40,7 +41,7 @@ export const doughroomApi = baseApi.injectEndpoints({
         url: PATHS.DOUGHROOM_ID + id,
         method: "GET",
       }),
-      providesTags: ["doughroom"],
+      providesTags: [API_TAGS.DOUGHTROOM],
     }),
 
     getDoughs: builder.query<GetDoughsResponse[], GetDoughsRequest>({
@@ -48,7 +49,7 @@ export const doughroomApi = baseApi.injectEndpoints({
         url: PATHS.DOUGHS + id,
         params: { date },
       }),
-      providesTags: ["doughroom"],
+      providesTags: [API_TAGS.DOUGHTROOM],
     }),
 
     postDough: builder.mutation<PostDoughroomsResponse, PostDoughroomsRequest>({
@@ -60,7 +61,7 @@ export const doughroomApi = baseApi.injectEndpoints({
           "Content-Type": "application/json",
         },
       }),
-      invalidatesTags: ["doughroom"],
+      invalidatesTags: [API_TAGS.DOUGHTROOM],
     }),
 
     readyDough: builder.mutation<ReadyDoughResponse, ReadyDoughRequest>({
@@ -68,7 +69,7 @@ export const doughroomApi = baseApi.injectEndpoints({
         url: PATHS.UPDATE + id + PATHS.READY,
         method: "PATCH",
       }),
-      invalidatesTags: ["doughroom"],
+      invalidatesTags: [API_TAGS.DOUGHTROOM],
     }),
 
     deleteDough: builder.mutation<DeleteDoughResponse, DeleteDoughRequest>({
@@ -76,7 +77,7 @@ export const doughroomApi = baseApi.injectEndpoints({
         url: PATHS.UPDATE + id,
         method: "DELETE",
       }),
-      invalidatesTags: ["doughroom"],
+      invalidatesTags: [API_TAGS.DOUGHTROOM],
     }),
 
     getStock: builder.query<GetStockReponse, GetStockRequest>({
@@ -84,7 +85,7 @@ export const doughroomApi = baseApi.injectEndpoints({
         url: PATHS.DOUGHROOM_ID + id,
         method: "GET",
       }),
-      providesTags: ["doughroom"],
+      providesTags: [API_TAGS.DOUGHTROOM],
     }),
 
     sendToDough: builder.mutation<SendToDoughResponse, SendToDoughRequest>({
@@ -93,7 +94,7 @@ export const doughroomApi = baseApi.injectEndpoints({
         method: "PATCH",
         body: { send_to_baker_room },
       }),
-      invalidatesTags: ["doughroom"],
+      invalidatesTags: [API_TAGS.DOUGHTROOM],
     }),
   }),
 });

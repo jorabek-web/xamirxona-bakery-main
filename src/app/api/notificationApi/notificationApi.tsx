@@ -1,3 +1,4 @@
+import { API_TAGS } from "../../../constants/ApiTags";
 import { baseApi } from "../baseApi";
 import { PATHS } from "./paths";
 import {
@@ -19,7 +20,7 @@ export const notificationApi = baseApi.injectEndpoints({
         url: PATHS.ALL + id,
         method: "GET",
       }),
-      providesTags: ["notification"],
+      providesTags: [API_TAGS.NOTIFICATION],
     }),
     getNotifications: builder.query<
       GetNotificationResponse[],
@@ -29,7 +30,7 @@ export const notificationApi = baseApi.injectEndpoints({
         url: PATHS.NOTIFICATIONS_START + id + PATHS.NOTIFICATIONS_END,
         method: "GET",
       }),
-      providesTags: ["notification"],
+      providesTags: [API_TAGS.NOTIFICATION],
     }),
     updateNotification: builder.mutation<
       UpdateNotificationResponse,
@@ -39,10 +40,13 @@ export const notificationApi = baseApi.injectEndpoints({
         url: PATHS.UPDATE + id + "/doughroom/" + body?.status,
         method: "PATCH",
       }),
-      invalidatesTags: ["notification"],
+      invalidatesTags: [API_TAGS.NOTIFICATION],
     }),
   }),
 });
 
-export const { useGetAllNotificationsQuery, useUpdateNotificationMutation, useGetNotificationsQuery } =
-  notificationApi;
+export const {
+  useGetAllNotificationsQuery,
+  useUpdateNotificationMutation,
+  useGetNotificationsQuery,
+} = notificationApi;

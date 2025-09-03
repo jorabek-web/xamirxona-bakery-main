@@ -1,6 +1,7 @@
 import { PATHS } from "./paths";
 import { LoginRequest, LoginResponse } from "./types";
 import { baseApi } from "../baseApi";
+import { API_TAGS } from "../../../constants/ApiTags";
 
 export const authApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
@@ -13,6 +14,7 @@ export const authApi = baseApi.injectEndpoints({
           "Content-Type": "application/json",
         },
       }),
+      invalidatesTags: [API_TAGS.USER],
     }),
   }),
 });

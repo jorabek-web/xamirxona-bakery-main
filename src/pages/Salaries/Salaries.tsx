@@ -17,20 +17,17 @@ import { Input } from "../../components/ui/input";
 import { useState } from "react";
 import { formatNumberWithSpaces } from "../../utils";
 import toast, { Toaster } from "react-hot-toast";
-import {
-  useGetSingleUserQuery,
-  useUpdateRefundMutation,
-} from "../../app/api";
+import { useGetSingleUserQuery, useUpdateRefundMutation } from "../../app/api";
 
 export const Salaries = () => {
   const navigate = useNavigate();
   const { data: user } = useGetSingleUserQuery([]);
   const [refund] = useUpdateRefundMutation();
-  const [amount, setAmount] = useState<string>();
+  const [amount, setAmount] = useState<number>();
   const [isOpen, setIsOpen] = useState(false);
 
   async function handleRefundAmountChange() {
-    if (!amount || !amount.trim() || amount == "0") {
+    if (!amount) {
       toast.error("kerakli maydonga miqdorni kiriting");
       return;
     }
@@ -46,11 +43,13 @@ export const Salaries = () => {
       toast.error(message);
       return;
     }
-    console.log(response);
 
     toast.success("muvaffaqiyatli yakunlandi");
+    setAmount(0);
     setIsOpen(false);
   }
+
+  const balance = Number(user?.salaryBalance ?? 0) + Number(amount ?? 0);
 
   return (
     <div>
@@ -124,14 +123,30 @@ export const Salaries = () => {
               <div className="relative w-full">
                 <Input
                   value={amount && formatNumberWithSpaces(amount!)}
-                  onChange={(e) => setAmount(e.target.value.replace(/\D/g, ""))}
+                  max={100000}
+                  onChange={(e) =>
+                    Number(e.target.value.replace(/\D/g, "")) +
+                      (user?.salaryBalance || 0) <=
+                      0 && setAmount(Number(e.target.value.replace(/\D/g, "")))
+                  }
                   id="amount"
                   placeholder="miqdorni kiriting"
                   type="text"
-                  className="col-span-3 border-yellow-400 text-black"
+                  onKeyDown={(e) => {
+                    if (["e", "E", "+", "-", ".", ","].includes(e.key)) {
+                      e.preventDefault();
+                    }
+                  }}
+                  className={`col-span-3 outline-none border-2 text-black border-yellow`}
                 />
               </div>
-              <p className="text-white">Balans: 0</p>
+              <p
+                className={` text-[18px] font-[600] ${
+                  balance! === 0 ? "text-white" : "text-yellow"
+                }`}
+              >
+                Balans: {formatNumberWithSpaces(balance ?? 0)}
+              </p>
             </div>
             <div className="flex justify-end">
               <Button

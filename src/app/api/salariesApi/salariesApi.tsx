@@ -1,3 +1,4 @@
+import { API_TAGS } from "../../../constants/ApiTags";
 import { baseApi } from "../baseApi";
 import { PATHS } from "./paths";
 import {
@@ -19,7 +20,7 @@ export const salariesApi = baseApi.injectEndpoints({
         url: PATHS.RECEIVED_MONEY + id,
         method: "GET",
       }),
-      providesTags: ["salaries"],
+      providesTags: [API_TAGS.SALARIES],
     }),
     getMoneyAccrued: builder.query<
       GetMoneyAccruedResponse[],
@@ -29,7 +30,7 @@ export const salariesApi = baseApi.injectEndpoints({
         url: PATHS.ACCRUED_MONEY + id,
         method: "GET",
       }),
-      providesTags: ["salaries"],
+      providesTags: [API_TAGS.SALARIES],
     }),
     updateRefund: builder.mutation<UpdateRefundResponse, UpdateRefundRequest>({
       query: ({ id, amount }) => ({
@@ -37,7 +38,7 @@ export const salariesApi = baseApi.injectEndpoints({
         method: "PATCH",
         body: { amount },
       }),
-      invalidatesTags: ["salaries"],
+      invalidatesTags: [API_TAGS.SALARIES, API_TAGS.USER],
     }),
   }),
 });

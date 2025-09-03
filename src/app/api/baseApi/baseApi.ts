@@ -1,6 +1,7 @@
 import { useStorage } from "./../../../utils/store/store";
 import { SERVER_URL } from "../../../constants";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { API_TAGS } from "../../../constants/ApiTags";
 
 export const baseApi = createApi({
   reducerPath: "baseApi",
@@ -15,14 +16,6 @@ export const baseApi = createApi({
     },
   }),
   endpoints: () => ({}),
-  tagTypes: [
-    "user",
-    "complaint",
-    "message",
-    "branch",
-    "doughroom",
-    "notification",
-    "salaries",
-  ],
+  tagTypes: Object.values(API_TAGS),
 });
 export default baseApi;

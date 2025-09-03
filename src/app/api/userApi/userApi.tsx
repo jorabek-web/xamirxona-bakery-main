@@ -1,4 +1,5 @@
 import { ROLES } from "../../../constants";
+import { API_TAGS } from "../../../constants/ApiTags";
 import { baseApi } from "../baseApi";
 import { PATHS } from "./paths";
 import {
@@ -21,6 +22,7 @@ export const userApi = baseApi.injectEndpoints({
         url: PATHS.SINGLE_USER,
         method: "GET",
       }),
+      providesTags: [API_TAGS.USER],
     }),
     getAllUsers: builder.query<GetAllUsersResponse, GetAllUsersRequest>({
       query: ({ roles }: { roles: ROLES[] }) => {
@@ -33,12 +35,14 @@ export const userApi = baseApi.injectEndpoints({
           params,
         };
       },
+      providesTags: [API_TAGS.USER,],
     }),
     getUserById: builder.query<GetUserByIdResponse, GetUserByIdRequest>({
       query: (id) => ({
         url: PATHS.USER_ID + id,
         method: "GET",
       }),
+      providesTags: [API_TAGS.USER],
     }),
     updateUserPassword: builder.mutation<
       ChangePasswordResponse,
@@ -49,6 +53,7 @@ export const userApi = baseApi.injectEndpoints({
         method: "PATCH",
         body,
       }),
+      invalidatesTags: [API_TAGS.USER],
     }),
 
     updateUserAvatar: builder.mutation<
@@ -60,6 +65,7 @@ export const userApi = baseApi.injectEndpoints({
         method: "PATCH",
         body,
       }),
+      invalidatesTags: [API_TAGS.USER],
     }),
 
     // updateUser: builder.mutation<UpdateUserResponse, UpdateUserRequest>({
