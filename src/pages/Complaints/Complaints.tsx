@@ -54,7 +54,7 @@ export const Information = () => {
   const handelPostComplaintMessage = async () => {
     if (!selectedUserId || !message.trim()) {
       toast.error("Iltimos, xodimni tanlang va xabar yozing!");
-      return; 
+      return;
     }
 
     const response = await postMessage({
@@ -195,7 +195,7 @@ export const Information = () => {
 
           <div className="px-4 flex-grow overflow-y-auto">
             <Select onValueChange={setSelectedUserId}>
-              <SelectTrigger className="w-full mt-8 mb-4 none text-white">
+              <SelectTrigger className="w-full mt-8 mb-4 outline-none bg-white text-[#1C2C57] font-[600]">
                 <SelectValue placeholder="Xodimni tanlang" />
               </SelectTrigger>
 

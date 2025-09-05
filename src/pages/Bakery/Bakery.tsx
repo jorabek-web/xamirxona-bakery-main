@@ -93,6 +93,7 @@ export const Bakery = () => {
       toast.success("Xamir miqdori qo‘shildi!");
       setIsOpen(false);
       setDoughTypeCount("");
+      setSelectedDoughType("");
     } catch (error: any) {
       toast.error(error.message);
     }
@@ -112,6 +113,7 @@ export const Bakery = () => {
 
       toast.success("Xamir uzatildi!");
       setModalOpen(false);
+      setSelectedBakery("");
     } catch (error: any) {
       toast.error(error.message || "Kutilmagan xatolik !");
       console.log(error);
@@ -184,6 +186,7 @@ export const Bakery = () => {
                           onClick={() => {
                             setModalOpen(true);
                             setSelectedDoughType(dough._id);
+                            setSelectedBakery("")
                           }}
                         >
                           Uzatish
@@ -285,6 +288,7 @@ export const Bakery = () => {
             <div className="flex justify-end items-end relative p-4">
               <Button
                 variant="outline"
+                onClick={() => setSelectedDoughType("")}
                 className="rounded-[50%] p-4 bg-[#FFCC15] fixed bottom-20 right-5 w-14 h-14"
               >
                 <FaPlus size={25} color="#1C2C57" />

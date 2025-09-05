@@ -119,7 +119,7 @@ export const Messages = () => {
               open={open}
               onOpenChange={setOpen}
             >
-              <SelectTrigger className="w-full mt-8 mb-36 none">
+              <SelectTrigger className="w-full mt-8 mb-36 outline-none bg-white text-[#1C2C57] font-[600]">
                 <SelectValue placeholder="Xodimni tanlang" />
               </SelectTrigger>
               <SelectContent className=" absolute top-full mt-2 z-50 max-h-60 overflow-y-auto bg-white shadow-lg rounded-md">
